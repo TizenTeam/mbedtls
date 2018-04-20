@@ -159,6 +159,8 @@ extern "C" {
 #define MBEDTLS_TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256     0xC031 /**< TLS 1.2 */
 #define MBEDTLS_TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384     0xC032 /**< TLS 1.2 */
 
+#define MBEDTLS_TLS_ECDH_ANON_WITH_AES_128_CBC_SHA256    0xFF00 /**< TLS 1.2 */
+
 #define MBEDTLS_TLS_ECDHE_PSK_WITH_RC4_128_SHA           0xC033 /**< Not in SSL3! */
 #define MBEDTLS_TLS_ECDHE_PSK_WITH_3DES_EDE_CBC_SHA      0xC034 /**< Not in SSL3! */
 #define MBEDTLS_TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA       0xC035 /**< Not in SSL3! */
@@ -248,6 +250,7 @@ typedef enum {
     MBEDTLS_KEY_EXCHANGE_ECDH_RSA,
     MBEDTLS_KEY_EXCHANGE_ECDH_ECDSA,
     MBEDTLS_KEY_EXCHANGE_ECJPAKE,
+    MBEDTLS_KEY_EXCHANGE_ECDH_ANON,
 } mbedtls_key_exchange_type_t;
 
 /* Key exchanges using a certificate */
@@ -319,7 +322,8 @@ typedef enum {
 /* Key exchanges using ECDHE */
 #if defined(MBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED)     || \
     defined(MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED)   || \
-    defined(MBEDTLS_KEY_EXCHANGE_ECDHE_PSK_ENABLED)
+    defined(MBEDTLS_KEY_EXCHANGE_ECDHE_PSK_ENABLED)     || \
+    defined(MBEDTLS_KEY_EXCHANGE_ECDH_ANON_ENABLED)
 #define MBEDTLS_KEY_EXCHANGE__SOME__ECDHE_ENABLED
 #endif
 
