@@ -44,11 +44,31 @@
 #if !defined(MBEDTLS_NO_PLATFORM_ENTROPY)
 
 #if !defined(unix) && !defined(__unix__) && !defined(__unix) && \
-    !defined(__APPLE__) && !defined(_WIN32)
+    !defined(__APPLE__) && !defined(_WIN32) && !defined(__OC_RANDOM)
 #error "Platform entropy sources only work on Unix and Windows, see MBEDTLS_NO_PLATFORM_ENTROPY in config.h"
 #endif
 
-#if defined(_WIN32) && !defined(EFIX64) && !defined(EFI32)
+#ifdef __OC_RANDOM
+#include <string.h>
+#include "port/oc_random.h"
+
+int mbedtls_platform_entropy_poll( void *data,
+                           unsigned char *output, size_t len, size_t *olen )
+{
+    (void) data;
+    *olen = 0;
+    do {
+        unsigned int val = oc_random_value();
+        size_t l = (len > sizeof(val))?sizeof(val):len;
+        memcpy(output + *olen, &val, l);
+        len -= l;
+        *olen += l;
+    } while (len > 0);
+
+    return 0;
+}
+
+#elif defined(_WIN32) && !defined(EFIX64) && !defined(EFI32)
 
 #if !defined(_WIN32_WINNT)
 #define _WIN32_WINNT 0x0400
