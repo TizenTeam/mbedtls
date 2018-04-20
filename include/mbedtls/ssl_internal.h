@@ -582,6 +582,8 @@ static inline mbedtls_x509_crt *mbedtls_ssl_own_cert( mbedtls_ssl_context *ssl )
 int mbedtls_ssl_check_cert_usage( const mbedtls_x509_crt *cert,
                           const mbedtls_ssl_ciphersuite_t *ciphersuite,
                           int cert_endpoint,
+                          const char *client_oid, size_t client_oid_len,
+                          const char *server_oid, size_t server_oid_len,
                           uint32_t *flags );
 #endif /* MBEDTLS_X509_CRT_PARSE_C */
 
@@ -642,6 +644,15 @@ static inline int mbedtls_ssl_safer_memcmp( const void *a, const void *b, size_t
         diff |= A[i] ^ B[i];
 
     return( diff );
+}
+
+/* SSL message type validation */
+static inline int mbedtls_ssl_message_type_valid(int message_type)
+{
+    return( message_type == MBEDTLS_SSL_MSG_CHANGE_CIPHER_SPEC ||
+            message_type == MBEDTLS_SSL_MSG_ALERT ||
+            message_type == MBEDTLS_SSL_MSG_HANDSHAKE ||
+            message_type == MBEDTLS_SSL_MSG_APPLICATION_DATA );
 }
 
 #if defined(MBEDTLS_SSL_PROTO_SSL3) || defined(MBEDTLS_SSL_PROTO_TLS1) || \
